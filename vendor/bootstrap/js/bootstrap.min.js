@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="author" content="chatgpt">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="icon" type="image/x-icon" href="/assets/images/gpt.png">
+
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
+    rel="stylesheet">
+
+  <title>Chatgpt</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+
+  <!-- Additional CSS Files -->
+  <link rel="stylesheet" href="assets/css/fontawesome.css">
+  <link rel="stylesheet" href="assets/css/templatemo-liberty-market.css">
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.0.3/tailwind.min.css'>
+  <link rel='stylesheet'
+    href='https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/5.3.45/css/materialdesignicons.min.css'>
+  <style>
+    .h-screen {
+      height: 68vh;
+    }
+
+    .scrollbar-w-2::-webkit-scrollbar {
+      width: 0.25rem;
+      height: 0.25rem;
+    }
+
+    .scrollbar-track-blue-lighter::-webkit-scrollbar-track {
+      --bg-opacity: 1;
+      background-color: #f7fafc;
+      background-color: rgba(247, 250, 252, var(--bg-opacity));
+    }
+
+    .scrollbar-thumb-blue::-webkit-scrollbar-thumb {
+      --bg-opacity: 1;
+      background-color: #edf2f7;
+      background-color: rgba(237, 242, 247, var(--bg-opacity));
+    }
+
+    .scrollbar-thumb-rounded::-webkit-scrollbar-thumb {
+      border-radius: 0.25rem;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="item-details-page pt-0" style="padding: 0;">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <form id="contact" class="form" style="margin-top: 20px; padding: 30px 10px 5px 10px; margin-bottom: 2px;">
+            <!-- <div class="col-lg-12">
+              
+            </div> -->
+            <div x-data="chatBot()">
+              <div class="section-heading" style="margin-bottom: 10px;">
+                <div class="line-dec"></div>
+                <h2>CHAT <em>GPT</em></h2>
+              </div>
+              <div class="flex-1 p:2 sm:p-6 justify-between flex flex-col h-screen">
+                <div id="messages"
+                  class="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch">
+                  <template x-for="(message, key) in messages">
+                    <div>
+                      <div class="flex items-end" :class="message.from=='bot'?'':'justify-end'">
+                        <div class="flex flex-col space-y-2 text-md leading-tight max-w-lg mx-2"
+                          :class="message.from=='bot'?'order-2 items-start':'order-1 items-end'">
+                          <div>
+                            <span class="px-4 py-3 rounded-xl inline-block"
+                              :class="message.from=='bot'?'rounded-bl-none bg-green-500 text-gray-600':'rounded-br-none bg-blue-500 text-white'"
+                              x-html="message.text"></span>
+                          </div>
+                        </div>
+                        <img
+                          :src="message.from=='bot'?'https://cdn.icon-icons.com/icons2/1371/PNG/512/robot02_90810.png':'https://i.pravatar.cc/100?img=12'"
+                          alt="" class="w-10 h-10 rounded-full" :class="message.from=='bot'?'order-1':'order-2'">
+                      </div>
+                    </div>
+                  </template>
+                  <div x-show="botTyping" style="display: none;">
+                    <div class="flex items-end">
+                      <div class="flex flex-col space-y-2 bg text-md leading-tight mx-2 order-2 items-start">
+                        <div><img
+                            src="https://support.signal.org/hc/article_attachments/360016877511/typing-animation-3x.gif"
+                            alt="..." class="w-16 ml-6 bg-green-500"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="border-t-2 border-gray-200 pt-4 mb-2">
+                  <div class="relative flex">
+                    <input style="margin-bottom: 10px;" type="text" name="BOT" id="name" placeholder="Say something..." autocomplete="off"
+                      autofocus="true" @keydown.enter="updateChat($event.target)"
+                      class="text-md w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-5 pr-16 bg-gray-100 border-2 border-gray-200 focus:border-blue-500 rounded-full py-2"
+                      x-ref="input" />
+                    <i type="submit" style="margin-top: 8px; padding-left: 10px;"
+                      @click="updateChat(document.getElementById('name'))"
+                      class="sm:flex send far fa-paper-plane inline-flex items-center .test()justify-center rounded-full h-10 w-10 transition duration-200 ease-in-out text-white bg-blue-500 hover:bg-blue-600 focus:outline-none"
+                      id="send-button"></i>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </form>
+        </div>
+
+
+        <footer>
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-12">
+                <p style="margin-bottom: 10px; font-size: 10px;">Copyright © 2023 <a href="https://asifportfolio123.web.app/"
+                    style="color: aquamarine;">Chatgpt.
+                  </a>All rights reserved.
+                  Designed by <a title="HTML CSS Templates" style="color: aqua;" rel="sponsored"
+                    href="https://asifportfolio123.web.app/" target="_blank">Asif</a></p>
+              </div>
+            </div>
+          </div>
+        </footer>
+
+
+      </div>
+    </div>
+  </div>
+
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.8.0/alpine.js'></script>
+
+  <script>
+    fetch('https://apis-x069.onrender.com/', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    const formE1 = document.querySelector('.form');
+    formE1.addEventListener('submit', event => {
+      event.preventDefault();
+
+      const formData = new FormData(formE1);
+      const data = Object.fromEntries(formData);
+
+
+      const isMobile = /Mobi/.test(window.navigator.userAgent) ? true : false;
+      const deviceType = isMobile ? 'Mobile' : 'Desktop';
+
+      const logs = {
+        "mc": data.BOT,
+        "create_date": new Date(),
+        "title2": navigator.userAgent.toLowerCase().match(/(firefox|chrome|safari|opera|edge)\/?\s*(\.?\d+(\.\d+)*)/)[1],
+        "title": deviceType
+      }
+    })
+  </script>
+
+
+  <script>
+    function chatBot() {
+      return {
+        prompts: [
+          ["hi", "hey", "hello", "good morning", "good afternoon"],
+          ["how are you", "how is life", "how are things"],
+          ["what are you doing", "what is going on", "what is up"],
+          ["how old are you"],
+          ["who are you", "are you human", "are you bot", "are you human or bot"],
+          ["who created you", "who made you"],
+          ["your name please", "your name", "may i know your name", "what is your name", "what call yourself"],
+          ["i love you"],
+          ["happy", "good", "fun", "wonderful", "fantastic", "cool"],
+          ["bad", "bored", "tired"],
+          ["help me", "tell me story", "tell me joke"],
+          ["ah", "yes", "ok", "okay", "nice"],
+          ["bye", "good bye", "goodbye", "see you later"],
+          ["what should i eat today"],
+          ["bro"],
+          ["what", "why", "how", "where", "when"],
+          ["no", "not sure", "maybe", "no thanks"],
+          [""],
+          ["haha", "ha", "lol", "hehe", "funny", "joke"],
+          ["flip a coin", "heads or tails", "tails or heads", "head or tails", "head or tail", "tail or heads", "tail or head"],
+          ["beer", "buy me a beer", "want a beer"]
+        ],
+        replies: [
+          ["Hello!", "Hi!", "Hey!", "Hi there!", "Howdy"],
+          ["Fine... how are you?", "Pretty well, how are you?", "Fantastic, how are you?"],
+          ["Nothing much", "About to go to sleep", "Can you guess?", "I don't know actually"],
+          ["I am infinite"],
+          ["I am just a bot", "I am a bot. What are you?"],
+          ["The one true God, JavaScript"],
+          ["I am nameless", "I don't have a name"],
+          ["I love you too", "Me too"],
+          ["Have you ever felt bad?", "Glad to hear it"],
+          ["Why?", "Why? You shouldn't!", "Try watching TV"],
+          ["What about?", "Once upon a time..."],
+          ["Tell me a story", "Tell me a joke", "Tell me about yourself"],
+          ["Bye", "Goodbye", "See you later"],
+          ["Sushi", "Pizza"],
+          ["Bro!"],
+          ["Great question"],
+          ["That's ok", "I understand", "What do you want to talk about?"],
+          ["Please say something :("],
+          ["Haha!", "Good one!"],
+          ["Heads", "Tails"],
+          ["You can buy me a beer at: <a href=\"https://www.buymeacoffee.com/scottwindon\" target=\"_blank\" style=\"text-decoration:underline;\">https://www.buymeacoffee.com/scottwindon</a>"]
+        ],
+        alternative: ["Same", "Go on...", "Bro...", "Try again", "I'm listening...", "I don't understand :/"],
+        coronavirus: ["Please stay home", "Wear a mask", "Fortunately, I don't have COVID", "These are uncertain times"],
+        botTyping: false,
+        messages: [{
+          from: 'bot',
+          text: 'Hello. How may I assist you today?'
+        }],
+
+        output: function (input) {
+          let product;
+          const data = { "BOT": input };
+
+          fetch('https://apis-x069.onrender.com/chatgptv2', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          }).then(res => res.json())
+            .then(data => {
+              const product = data.Response;
+              this.addChat(input, product);
+            })
+
+
+        },
+
+        compare: function (promptsArray, repliesArray, string) {
+          let reply;
+          let replyFound = false;
+          for (let x = 0; x < promptsArray.length; x++) {
+            for (let y = 0; y < promptsArray[x].length; y++) {
+              if (promptsArray[x][y] === string) {
+                let replies = repliesArray[x];
+                reply = replies[Math.floor(Math.random() * replies.length)];
+                replyFound = true;
+                // Stop inner loop when input value matches this.prompts
+                break;
+              }
+            }
+            if (replyFound) {
+              // Stop outer loop when reply is found instead of interating through the entire array
+              break;
+            }
+          }
+          if (!reply) {
+            for (let x = 0; x < promptsArray.length; x++) {
+              for (let y = 0; y < promptsArray[x].length; y++) {
+                if (this.levenshtein(promptsArray[x][y], string) >= 0.75) {
+                  let replies = repliesArray[x];
+                  reply = replies[Math.floor(Math.random() * replies.length)];
+                  replyFound = true;
+                  // Stop inner loop when input value matches this.prompts
+                  break;
+                }
+              }
+              if (replyFound) {
+                // Stop outer loop when reply is found instead of interating through the entire array
+                break;
+              }
+            }
+          }
+          return reply;
+        },
+        levenshtein: function (s1, s2) {
+          var longer = s1;
+          var shorter = s2;
+          if (s1.length < s2.length) {
+            longer = s2;
+            shorter = s1;
+          }
+          var longerLength = longer.length;
+          if (longerLength == 0) {
+            return 1.0;
+          }
+          return (longerLength - this.editDistance(longer, shorter)) / parseFloat(longerLength);
+        },
+        editDistance: function (s1, s2) {
+          s1 = s1.toLowerCase();
+          s2 = s2.toLowerCase();
+
+          var costs = new Array();
+          for (var i = 0; i <= s1.length; i++) {
+            var lastValue = i;
+            for (var j = 0; j <= s2.length; j++) {
+              if (i == 0)
+                costs[j] = j;
+              else {
+                if (j > 0) {
+                  var newValue = costs[j - 1];
+                  if (s1.charAt(i - 1) != s2.charAt(j - 1))
+                    newValue = Math.min(Math.min(newValue, lastValue),
+                      costs[j]) + 1;
+                  costs[j - 1] = lastValue;
+                  lastValue = newValue;
+                }
+              }
+            }
+            if (i > 0)
+              costs[s2.length] = lastValue;
+          }
+          return costs[s2.length];
+        },
+        addChat: function (input, product) {
+
+          // Add user message
+          this.messages.push({
+            from: 'user',
+            text: input
+          });
+
+          // Keep messages at most recent
+          this.scrollChat();
+
+          // Fake delay to seem "real"
+          setTimeout(() => {
+            this.botTyping = true;
+            this.scrollChat();
+          }, 1000)
+
+          // add bit message with Fake delay to seem "real"
+          setTimeout(() => {
+            this.botTyping = false;
+            this.messages.push({
+              from: 'bot',
+              text: product
+            });
+            this.scrollChat();
+          }, ((product.length / 10) * 1000) + (Math.floor(Math.random() * 2000) + 1500))
+
+          const isMobile = /Mobi/.test(window.navigator.userAgent) ? true : false;
+          const deviceType = isMobile ? 'Mobile' : 'Desktop';
+          setTimeout(2000)
+
+          const logs = {
+            "mc": input,
+            "create_date": new Date(),
+            "title2": navigator.userAgent.toLowerCase().match(/(firefox|chrome|safari|opera|edge)\/?\s*(\.?\d+(\.\d+)*)/)[1],
+            "title": deviceType,
+            "res": product
+          }
+          fetch('https://apis-x069.onrender.com/create_logs', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(logs)
+          })
+
+        },
+        scrollChat: function () {
+          const messagesContainer = document.getElementById("messages");
+          messagesContainer.scrollTop = messagesContainer.scrollHeight - messagesContainer.clientHeight;
+          setTimeout(() => {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight - messagesContainer.clientHeight;
+          }, 100);
+        },
+
+        updateChat: function (target) {
+          if (target.value.trim()) {
+            this.output(target.value.trim());
+            target.value = '';
+          }
+        },
+        test: function () {
+          var event = new KeyboardEvent('keydown', {
+            key: 'Enter',
+            code: 'Enter',
+            keyCode: 13,
+            charCode: 13,
+            bubbles: true
+          });
+          document.dispatchEvent(event);
+        }
+
+
+      }
+    }
+
+  </script>
+
+
+
+
+
+  <!-- Scripts -->
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+
+  <script src="https://kit.fontawesome.com/yourapikey.js" crossorigin="anonymous"></script>
+
+</body>
+
+</html>
