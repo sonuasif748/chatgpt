@@ -222,8 +222,20 @@
         }],
 
         output: function (input) {
-          let product;
           const data = { "BOT": input };
+          this.messages.push({
+            from: 'user',
+            text: input
+          });
+
+          this.scrollChat();
+
+          // Reduce the duration of the initial delay
+          setTimeout(() => {
+            this.botTyping = true;
+            this.scrollChat();
+          }, 500);
+
 
           fetch('https://sonuasif748-star.hf.space/v1/gemini_aistudio', {
             method: 'POST',
@@ -236,10 +248,7 @@
               const product = data.Response;
               this.addChat(input, product);
             })
-
-
         },
-
         compare: function (promptsArray, repliesArray, string) {
           let reply;
           let replyFound = false;
@@ -317,35 +326,45 @@
           return costs[s2.length];
         },
         addChat: function (input, product) {
+         
 
-          // Add user message
-          this.messages.push({
-            from: 'user',
-            text: input
-          });
-
-          // Keep messages at most recent
           this.scrollChat();
 
-          // Fake delay to seem "real"
+          // Reduce the duration of the initial delay
           setTimeout(() => {
             this.botTyping = true;
             this.scrollChat();
-          }, 1000)
+          }, 500);
 
-          // add bit message with Fake delay to seem "real"
+          // Optimize the delay for adding the bot message
+
+            // Split content based on triple backticks
+    const codeBlocks = product.split("```");
+
+// Process code blocks and add code tags
+const formattedCodeBlocks = codeBlocks.map((block, index) => {
+  // Alternate between code and regular text
+  return index % 2 === 0 ? block.replace(/\n/g, "<br>") : `<span  style="display: block; color: #fff; margin: 10px 0; border-radius: 8px"> <span style="display: block; background-color: #777; padding: 6px 10px;     border-top-left-radius: 8px;
+    border-top-right-radius: 8px; ">code</span>
+    <code style="display: block; background-color: #333;padding: 10px; color: #fff;     border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px; "><pre>${block}</pre></code></span>`;
+});
+
+// Join everything back
+const formattedContent = formattedCodeBlocks.join('');
+
           setTimeout(() => {
             this.botTyping = false;
             this.messages.push({
               from: 'bot',
-              text: product
+              text: formattedContent
             });
             this.scrollChat();
-          }, ((product.length / 10) * 1000) + (Math.floor(Math.random() * 2000) + 1500))
+          }, 1000);  // Set a fixed delay or adjust as needed
 
           const isMobile = /Mobi/.test(window.navigator.userAgent) ? true : false;
           const deviceType = isMobile ? 'Mobile' : 'Desktop';
-          setTimeout(2000)
+          setTimeout(2000);
 
           const logs = {
             "mc": input,
@@ -354,6 +373,7 @@
             "title": deviceType,
             "res": product
           }
+
           fetch('https://sonuasif748-star.hf.space/v1/create_logs', {
             method: 'POST',
             headers: {
@@ -361,8 +381,8 @@
             },
             body: JSON.stringify(logs)
           })
-
         },
+
         scrollChat: function () {
           const messagesContainer = document.getElementById("messages");
           messagesContainer.scrollTop = messagesContainer.scrollHeight - messagesContainer.clientHeight;
@@ -377,6 +397,7 @@
             target.value = '';
           }
         },
+
         test: function () {
           var event = new KeyboardEvent('keydown', {
             key: 'Enter',
@@ -387,7 +408,6 @@
           });
           document.dispatchEvent(event);
         }
-
 
       }
     }
